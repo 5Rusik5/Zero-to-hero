@@ -1,24 +1,70 @@
-from django.shortcuts import render,redirect,HttpResponse
+from django.shortcuts import render,redirect,HttpResponse, get_object_or_404
 
 from .models import Articles,Comments
 from django.views.generic import ListView, DetailView,CreateView, UpdateView,DeleteView
 from django.views.generic.edit import FormMixin
-from .forms import ArticleForm, AuthUserForm, RegisterUserForm,CommentForm
+from .forms import ArticleForm, AuthUserForm, RegisterUserForm,CommentForm, EmailPostForm
 from django.urls import reverse, reverse_lazy
 from django.contrib import messages
 from django.contrib.auth.views import LoginView,LogoutView
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.mail import send_mail
 from django.http import HttpResponseRedirect
-
+from django.contrib.auth.decorators import login_required
 from django.template import Context, Template
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
+
+def post_list(request):
+    object_list = Articles.objects.all()
+    paginator = Paginator(object_list, 3)
+
+    page = request.GET.get('page')
+
+    try: 
+        list_articles = paginator.page(page)
+    except PageNotAnInteger:
+        list_articles = paginator.page(1)
+    except EmprtPage:
+        list_articles = paginator.page(paginator.num_pages)
+    return render(request, "index.html", {'list_articles': list_articles, 'page':page})
+
+
+
+
+def post_share(request, post_name):
+    articles = get_object_or_404(Articles, name=post_name)
+    sent = False
+
+    if request.method == "POST":
+        form = EmailPostForm(request.POST)  
+        if(form.is_valid()): 
+            cd = form.cleaned_data
+            subject_url = '{} ({}) recommends you reading "{}"'.format(cd['name'], cd['email'], post_name)
+            message = "Read '{}' \n\n{}\'s comments: {}".format(post_name, cd['name'], cd['comments'])
+            send_mail(subject_url, message, 'loarsen9@email.com', [cd['to']])
+    else: 
+        form = EmailPostForm()
+
+    return render(request, 'share.html', {
+                            'articles': articles,
+                            'form':  form,
+                            'sent': sent})
+
+
+
+
+class EditProfileName: 
+    pass;
 
 
 class HomeListView(ListView):
-    model = Articles
-    template_name = 'index.html'
-    context_object_name = 'list_articles'
+    pass
+    #model = Articles
+    #template_name = 'index.html'
+    #context_object_name = 'list_articles'
 
 
 # class LoginRequiredMixin(AccessMixin):
@@ -40,7 +86,7 @@ class CustomSuccessMessageMixin:
         return '%s?id=%s' % (self.success_url, self.object.id)
 
 
-
+# @login_required(login_url='login_page')
 class HomeDetailView(CustomSuccessMessageMixin, FormMixin, DetailView):
     model = Articles
     template_name = 'detail.html'
@@ -66,7 +112,6 @@ class HomeDetailView(CustomSuccessMessageMixin, FormMixin, DetailView):
         self.object.save()
         return super().form_valid(form)
     
-
 
 
 def update_comment_status(request, pk, type):
