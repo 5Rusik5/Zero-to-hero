@@ -118,17 +118,16 @@ def user_edit(request, user_name):
 
 
 # search
-class SearchResultView(ListView):
-    model = Articles
-    template_name = "search_result.html"
-    context_object_name = 'object_list'
-    #queryset = Articles.objects.filter(name = 'World')
+def search(request):
+    query = request.GET.get('q') if request.method!= None else ''
+    results = Articles.objects.filter(
+        Q(name__icontains=query) |
+        Q(text__icontains=query)
+    )
+    if query == '':
+        results = Articles.objects.all()
+    return render(request, "search_result.html", {'list_articles': results})
 
-    def get_queryset(self):
-        query = self.request.GET.get("q")
-        object_list = Articles.objects.filter(Q(name__icontains=query))
-        return object_list
-        #return Articles.objects.filter(Q(name = "World"))
 
 
 class HomeListView(ListView):
