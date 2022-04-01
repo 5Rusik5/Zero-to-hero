@@ -11,8 +11,10 @@ class EmailPostForm(forms.Form):
     email = forms.EmailField()
     to = forms.EmailField()
     comments = forms.CharField(required = False, widget = forms.Textarea)
-         
 
+class EditProfileName(forms.Form): 
+    name = forms.CharField(max_length = 25)
+    
 
 class ArticleForm(forms.ModelForm):
     class Meta:

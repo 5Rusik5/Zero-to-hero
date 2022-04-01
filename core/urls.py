@@ -12,6 +12,10 @@ urlpatterns = [
     path('register', views.RegisterUserView.as_view(), name='register_page'),
     path('logout', views.MyProjectLogout.as_view(), name='logout_page'),
     path('<str:post_name>/share/', views.post_share, name='post_share'),
+    path('<str:user_name/edit/', views.user_edit, name = "user_edit"),
+    path('search/', views.SearchResultView.as_view(), name = "search_results"),
+    #url password reset application urls.py
+    path('password_reset/<str:name>/', views.password_reset_form, name="password_reset"),
 
     #ajax
     path('update_comment_status/<int:pk>/<slug:type>', views.update_comment_status, name='update_comment_status')

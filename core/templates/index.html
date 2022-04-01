@@ -15,16 +15,16 @@
       
       
 <div class="container mt-4">
-          <ul class="nav nav-pills">
-  <li class="nav-item">
-      {% url 'home' as url_home %}
-      
-    <a class="nav-link {% if url_home == request.path %}active{% endif %}" href="{{url_home}}">Main page</a>
-  </li>
-  <li class="nav-item">
-      {% url 'edit_page' as url_edit_page %}
-    <a class="nav-link {% if url_edit_page == request.path %}active{% endif %}" href="{{url_edit_page}}">Create</a>
-  </li>
+  <ul class="nav nav-pills">
+    <li class="nav-item">
+        {% url 'home' as url_home %}
+        
+      <a class="nav-link {% if url_home == request.path %}active{% endif %}" href="{{url_home}}">Main page</a>
+    </li>
+    <li class="nav-item">
+        {% url 'edit_page' as url_edit_page %}
+      <a class="nav-link {% if url_edit_page == request.path %}active{% endif %}" href="{{url_edit_page}}">Create</a>
+    </li>
   
   
   
@@ -51,13 +51,20 @@
   
   
   
-  
+  <div class = "margin" style = "position: absolute; left: 50%; top: 13%; margin: -50px -50px; transform: translate(-50%, -50%);  ">
+    <form action = "{%url 'search_results'%}" method = "get">
+      <input name= "q" type = "text" placeholder = "Search..." />
+    </form>
+  </div>
   
 
   <div style = "margin: 0 50px; position: absolute; right: 0;" >
-    
     {{request.user}}
+        <a href = "/password_reset/{{request.user}}">Password reset</a>
   </div>
+
+
+
   </ul>
 
   {% block content %}
