@@ -46,13 +46,9 @@
   </li>
   
   {% endif %}
-  
-  
-  
-  
-  
-  
 
+
+            
 
 {{request.user}}
 </ul>
@@ -68,6 +64,7 @@
                 
                 
                 <li class="list-group-item">
+                    <img src="{{i.picture}}">
                     <b>{{i.create_date}}</b>
                 <span class="m-2">{{i.name}}</span>
                 <span>{{i.text|truncatechars:"5"}}</span>
