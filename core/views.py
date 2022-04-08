@@ -15,8 +15,6 @@ from django.contrib.auth.decorators import login_required
 from django.template import Context, Template
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
-
-
 from django.core.mail import send_mail, BadHeaderError
 from django.http import HttpResponse
 from django.contrib.auth.forms import PasswordResetForm
@@ -26,6 +24,8 @@ from django.utils.http import urlsafe_base64_encode
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.encoding import force_bytes
 from django.db.models import Q;
+
+
 
 def post_list(request):
     object_list = Articles.objects.all()
@@ -42,6 +42,14 @@ def post_list(request):
     return render(request, "index.html", {'list_articles': list_articles, 'page':page})
 
 
+
+# chat function
+def chat(request):
+    return render(request, "chat/chat.html")
+
+
+def room(request, room_name):
+    return render(request, "chat/room.html",  {"room_name": room_name})
 
 
 def post_share(request, post_name):
