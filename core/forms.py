@@ -19,7 +19,7 @@ class EditProfileName(forms.Form):
 class ArticleForm(forms.ModelForm):
     class Meta:
         model = Articles
-        fields = ('name','text')
+        fields = ('name','text', 'picture')
     def __init__(self,*args,**kwargs):
         super().__init__(*args,**kwargs)
         for field in self.fields:

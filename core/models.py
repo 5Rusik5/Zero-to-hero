@@ -8,6 +8,7 @@ class Articles(models.Model):
     author = models.ForeignKey(User, on_delete = models.CASCADE, verbose_name='Article owner', blank = True, null = True )
     create_date = models.DateTimeField(auto_now=True)
     name = models.CharField(max_length=200, verbose_name='Post name:')
+    picture = models.ImageField(upload_to="images",blank=True,null=True,  default='images/default/images.png')
     text = models.TextField(verbose_name='Text')
     
     def __str__(self):
