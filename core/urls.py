@@ -11,6 +11,7 @@ urlpatterns = [
     path('login', views.MyprojectLoginView.as_view(), name='login_page'),
     path('register', views.RegisterUserView.as_view(), name='register_page'),
     path('logout', views.MyProjectLogout.as_view(), name='logout_page'),
+<<<<<<< HEAD
     path('<str:post_name>/share/', views.post_share, name='post_share'),
     path('<str:user_name/edit/', views.user_edit, name = "user_edit"),
     path('search/', views.search, name = "search_results"),
@@ -20,7 +21,11 @@ urlpatterns = [
     path("chat/<str:room_name>/", views.room, name = "room"),
     #ajax
     path('update_comment_status/<int:pk>/<slug:type>', views.update_comment_status, name='update_comment_status')
+=======
+>>>>>>> e1bbf7a667df6c9c47a5748276b282f9f6b8bfe3
 
+
+    path('update_comment_status/<int:pk>/<slug:type>', views.update_comment_status, name = 'update_comment_status'),
 
 
 ]

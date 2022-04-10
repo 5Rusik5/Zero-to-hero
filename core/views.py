@@ -164,57 +164,56 @@ class CustomSuccessMessageMixin:
         return '%s?id=%s' % (self.success_url, self.object.id)
 
 
+<<<<<<< HEAD
 # @login_required(login_url='login_page')
+=======
+>>>>>>> e1bbf7a667df6c9c47a5748276b282f9f6b8bfe3
 class HomeDetailView(CustomSuccessMessageMixin, FormMixin, DetailView):
     model = Articles
     template_name = 'detail.html'
     context_object_name = 'get_article'
     form_class = CommentForm
-    success_msg = 'Comment successfully created, please wait for moderation'
-    
-    
+    success_msg = 'Comment created successfully'
+
     def get_success_url(self):
-        return reverse_lazy('detail_page', kwargs={'pk':self.get_object().id})
-    
-    def post(self,request, *args, **kwargs):
+        return reverse_lazy('detail_page', kwargs={'pk': self.get_object().id})
+
+    def post(self, request, *args, **kwargs):
         form = self.get_form()
         if form.is_valid():
             return self.form_valid(form)
         else:
             return self.form_invalid(form)
-    
-    def form_valid(self,form):
+
+    def form_valid(self, form):
         self.object = form.save(commit=False)
         self.object.article = self.get_object()
         self.object.author = self.request.user
         self.object.save()
         return super().form_valid(form)
-    
-
 
 def update_comment_status(request, pk, type):
     item = Comments.objects.get(pk=pk)
     if request.user != item.article.author:
         return HttpResponse('deny')
-    
+
     if type == 'public':
         import operator
         item.status = operator.not_(item.status)
         item.save()
         template = 'comment_item.html'
-        context = {'item':item, 'status_comment':'Comment published'}
+        context = {'item': item, 'status_comment': 'Comment publiced'}
         return render(request, template, context)
-        
+
     elif type == 'delete':
         item.delete()
         return HttpResponse('''
         <div class="alert alert-success">
-        Comment has been deleted
+        Comment is deleted
         </div>
         ''')
-    
-    return HttpResponse('1')
 
+    return HttpResponse('1')
 
 
 class ArticleCreateView(LoginRequiredMixin, CustomSuccessMessageMixin, CreateView):

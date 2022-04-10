@@ -19,7 +19,11 @@ class EditProfileName(forms.Form):
 class ArticleForm(forms.ModelForm):
     class Meta:
         model = Articles
+<<<<<<< HEAD
         fields = ('name','text', 'picture')
+=======
+        fields = ('name','text','picture')
+>>>>>>> e1bbf7a667df6c9c47a5748276b282f9f6b8bfe3
     def __init__(self,*args,**kwargs):
         super().__init__(*args,**kwargs)
         for field in self.fields:
@@ -52,9 +56,6 @@ class RegisterUserForm(forms.ModelForm):
         if commit:
             user.save()
         return user
-        
-        
-        
         
         
 class CommentForm(forms.ModelForm):
