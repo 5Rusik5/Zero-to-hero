@@ -1,10 +1,9 @@
-from django.shortcuts import render,redirect,HttpResponse, get_object_or_404
-
+from django.shortcuts import render,redirect,HttpResponse
 from .models import Articles,Comments
 from django.views.generic import ListView, DetailView,CreateView, UpdateView,DeleteView
 from django.views.generic.edit import FormMixin
-from .forms import ArticleForm, AuthUserForm, RegisterUserForm,CommentForm, EmailPostForm, EditProfileName
-from django.urls import reverse, reverse_lazy 
+from .forms import ArticleForm, AuthUserForm, RegisterUserForm,CommentForm
+from django.urls import reverse, reverse_lazy
 from django.contrib import messages
 from django.contrib.auth.views import LoginView,LogoutView
 from django.contrib.auth.models import User
@@ -13,136 +12,19 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.template import Context, Template
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-
-from django.core.mail import send_mail, BadHeaderError
-from django.http import HttpResponse
 from django.contrib.auth.forms import PasswordResetForm
-from django.template.loader import render_to_string
-from django.db.models.query_utils import Q
 from django.utils.http import urlsafe_base64_encode
-from django.contrib.auth.tokens import default_token_generator
 from django.utils.encoding import force_bytes
-from django.db.models import Q;
-
-
-
-def post_list(request):
-    object_list = Articles.objects.all()
-    paginator = Paginator(object_list, 3)
-
-    page = request.GET.get('page')
-
-    try: 
-        list_articles = paginator.page(page)
-    except PageNotAnInteger:
-        list_articles = paginator.page(1)
-    except EmprtPage:
-        list_articles = paginator.page(paginator.num_pages)
-    return render(request, "index.html", {'list_articles': list_articles, 'page':page})
-
-
-
-# chat function
-def chat(request):
-    return render(request, "chat/chat.html")
-
-
-def room(request, room_name):
-    return render(request, "chat/room.html",  {"room_name": room_name})
-
-
-def post_share(request, post_name):
-    articles = get_object_or_404(Articles, name=post_name)
-    sent = False
-
-    if request.method == "POST":
-        form = EmailPostForm(request.POST)  
-        if(form.is_valid()): 
-            cd = form.cleaned_data
-            subject_url = '{} ({}) recommends you reading "{}"'.format(cd['name'], cd['email'], post_name)
-
-            message = "Read '{}' \n\n{}\'s comments: {}".format(post_name, cd['name'], cd['comments'])
-            send_mail(subject_url, message, 'loarsen9@email.com', [cd['to']])
-    else: 
-        form = EmailPostForm()
-
-    return render(request, 'share.html', {
-                            'articles': articles,
-                            'form':  form,
-                            'sent': sent})
-
-
-def password_reset_form(request, name):
-    if request.method == "POST":
-        password_reset_form = PasswordResetForm(request.POST)
-
-        if password_reset_form.is_valid():
-            data = password_reset_form.cleaned_data['email']
-
-            associated_users = User.objects.filter(Q(username = name))
-            print(associated_users)
-            if associated_users.exists():
-                for user in associated_users:
-                    subject = "Password Reset Requested"
-                    email_template_name = "accounts/password_reset_email.txt"
-                    c = {
-                    "email": user.email,
-                    'domain':'127.0.0.1:8000',
-                    'site_name': 'Website',
-                    "uid": urlsafe_base64_encode(force_bytes(user.pk)),
-                    "user": user,
-                    'token': default_token_generator.make_token(user),
-                    'protocol': 'http',
-                    }
-                    email = render_to_string(email_template_name, c)
-                    try:
-                        send_mail(subject,  email, 'loarsen9@gmail.com' , [data])
-                    except BadHeaderError:
-                        return HttpResponse('Invalid header found.')
-                    return redirect ("/password_reset/done/")
-    password_reset_form = PasswordResetForm()
-    return render(request=request, template_name="accounts/password-reset-form.html", context={"password_reset_form":password_reset_form})
-
-
-
-#todo: not finished have error need to fiexd
-def user_edit(request, user_name): 
-    name = get_object_or_404(User, name=user_name);
-
-    if(reuest.method == "POST"):
-        form = EditProfileName(request.POST)
-        if(form.is_valid()):
-            cd = form.cleaned_data
-    else:
-        form = EditProfileName()
-
-    return render(request, 'editUser.html', {
-                            "name": name,
-                            "form": form
-        })
-
-
-
-
-# search
-def search(request):
-    query = request.GET.get('q') if request.method!= None else ''
-    results = Articles.objects.filter(
-        Q(name__icontains=query) |
-        Q(text__icontains=query)
-    )
-    if query == '':
-        results = Articles.objects.all()
-    return render(request, "search_result.html", {'list_articles': results})
-
+from django.contrib.auth.tokens import default_token_generator
+from django.template.loader import render_to_string
+from django.db.models import Q
+from django.core.mail import BadHeaderError, send_mail
 
 
 class HomeListView(ListView):
-    pass
-    #model = Articles
-    #template_name = 'index.html'
-    #context_object_name = 'list_articles'
+    model = Articles
+    template_name = 'index.html'
+    context_object_name = 'list_articles'
 
 
 # class LoginRequiredMixin(AccessMixin):
@@ -164,56 +46,96 @@ class CustomSuccessMessageMixin:
         return '%s?id=%s' % (self.success_url, self.object.id)
 
 
-<<<<<<< HEAD
-# @login_required(login_url='login_page')
-=======
->>>>>>> e1bbf7a667df6c9c47a5748276b282f9f6b8bfe3
 class HomeDetailView(CustomSuccessMessageMixin, FormMixin, DetailView):
     model = Articles
-    template_name = 'detail.html'
+    template_name = 'detail.html' 
     context_object_name = 'get_article'
     form_class = CommentForm
-    success_msg = 'Comment created successfully'
-
+    success_msg = 'Comment successfully created, please wait for moderation'
+    
+    
     def get_success_url(self):
-        return reverse_lazy('detail_page', kwargs={'pk': self.get_object().id})
-
-    def post(self, request, *args, **kwargs):
+        return reverse_lazy('detail_page', kwargs={'pk':self.get_object().id})
+    
+    def post(self,request, *args, **kwargs):
         form = self.get_form()
         if form.is_valid():
             return self.form_valid(form)
         else:
             return self.form_invalid(form)
-
-    def form_valid(self, form):
+    
+    def form_valid(self,form):
         self.object = form.save(commit=False)
         self.object.article = self.get_object()
         self.object.author = self.request.user
         self.object.save()
         return super().form_valid(form)
+    
+    
+def search(request):
+    query = request.GET.get('q') if request.method!= None else ''
+    results = Articles.objects.filter(
+        Q(name__icontains=query) |
+        Q(text__icontains=query)
+    )
+    if query == '':
+        results = Articles.objects.all()
+    return render(request, "search_results.html", {'list_articles': results})
+    
+    
+        
+def password_reset_form(request):
+    if request.method == "POST":
+        password_reset_form = PasswordResetForm(request.POST)
+        if password_reset_form.is_valid():
+            data = password_reset_form.cleaned_data['email']
+            associated_users = User.objects.filter(Q(email=data))
+            if associated_users.exists():
+                for user in associated_users:
+                    subject = "Password Reset Requested"
+                    email_template_name = "accounts/password_reset_email.txt"
+                    c = {
+                    "email":user.email,
+                    'domain':'127.0.0.1:8000',
+                    'site_name': 'Website',
+                    "uid": urlsafe_base64_encode(force_bytes(user.pk)),
+                    "user": user,
+                    'token': default_token_generator.make_token(user),
+                    'protocol': 'http',
+                    }
+                    email = render_to_string(email_template_name, c)
+                    try:
+                        send_mail(subject, email, 'arusabitkyzy03@gmail.com' , [user.email])
+                    except BadHeaderError:
+                        return HttpResponse('Invalid header found.')
+                    return redirect ("/password_reset/done/")
+    password_reset_form = PasswordResetForm()
+    return render(request=request, template_name="accounts/password-reset-form.html", context={"password_reset_form":password_reset_form})
+
 
 def update_comment_status(request, pk, type):
     item = Comments.objects.get(pk=pk)
     if request.user != item.article.author:
         return HttpResponse('deny')
-
+    
     if type == 'public':
         import operator
         item.status = operator.not_(item.status)
         item.save()
         template = 'comment_item.html'
-        context = {'item': item, 'status_comment': 'Comment publiced'}
+        context = {'item':item, 'status_comment':'Comment published'}
         return render(request, template, context)
-
+        
     elif type == 'delete':
         item.delete()
         return HttpResponse('''
         <div class="alert alert-success">
-        Comment is deleted
+        Comment has been deleted
         </div>
         ''')
-
+    
     return HttpResponse('1')
+
 
 
 class ArticleCreateView(LoginRequiredMixin, CustomSuccessMessageMixin, CreateView):
@@ -262,7 +184,7 @@ class RegisterUserView(CreateView):
     model = User
     template_name = 'register_page.html'
     form_class = RegisterUserForm
-    success_url = reverse_lazy('edit_page')
+    success_url = reverse_lazy('edit-page')
     success_msg = 'User successfully created'
     def form_valid(self,form):
         form_valid = super().form_valid(form)
