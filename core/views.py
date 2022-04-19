@@ -1,5 +1,7 @@
-from django.shortcuts import render,redirect,HttpResponse
-from .models import Articles,Comments
+import datetime
+from unittest import loader
+from django.shortcuts import get_object_or_404, render,redirect,HttpResponse
+from .models import Articles,Comments, Likes, Notification
 from django.views.generic import ListView, DetailView,CreateView, UpdateView,DeleteView
 from django.views.generic.edit import FormMixin
 from .forms import ArticleForm, AuthUserForm, RegisterUserForm,CommentForm
@@ -19,12 +21,14 @@ from django.contrib.auth.tokens import default_token_generator
 from django.template.loader import render_to_string
 from django.db.models import Q
 from django.core.mail import BadHeaderError, send_mail
+from django.utils import timezone
 
 
 class HomeListView(ListView):
     model = Articles
     template_name = 'index.html'
     context_object_name = 'list_articles'
+    
 
 
 # class LoginRequiredMixin(AccessMixin):
@@ -69,8 +73,14 @@ class HomeDetailView(CustomSuccessMessageMixin, FormMixin, DetailView):
         self.object.article = self.get_object()
         self.object.author = self.request.user
         self.object.save()
+        notification = Notification.objects.create(notification_type=2, 
+                                                   user_to = self.object.article.author, 
+                                                   user_from = self.object.author,
+                                                   post = self.object.article,
+                                                   comment = self.object,
+                                                   date = timezone.now())
+        notification.save()
         return super().form_valid(form)
-    
     
 def search(request):
     query = request.GET.get('q') if request.method!= None else ''
@@ -81,6 +91,43 @@ def search(request):
     if query == '':
         results = Articles.objects.all()
     return render(request, "search_results.html", {'list_articles': results})
+    
+@login_required
+def like(request, pk):
+  
+    user = request.user
+    post = Articles.objects.get(id=pk)
+    post_owner = post.author
+    notification_type = 1
+    current_likes = post.likes 
+    liked = Likes.objects.filter(user=user, post=post)
+    
+    
+    if not liked: 
+        like = Likes.objects.create(user=user, post=post)
+        like.save()
+        current_likes = current_likes + 1 
+        notification = Notification.objects.create(notification_type=notification_type, 
+                                                   user_to = post_owner,
+                                                   user_from=user,
+                                                   post=post,
+                                                   likes=like,
+                                                   date = timezone.now())
+        notification.save()
+        
+    else:
+        Likes.objects.filter(user=user, post=post).delete()
+        Notification.objects.filter(notification_type=notification_type, 
+                                                   user_to = post_owner,
+                                                   user_from=user,
+                                                   post=post).delete()
+        current_likes = current_likes - 1
+    
+    
+    
+    post.likes=current_likes
+    post.save()
+    return HttpResponseRedirect(reverse('detail_page', args=[pk]))
     
     
         
@@ -112,11 +159,14 @@ def password_reset_form(request):
     password_reset_form = PasswordResetForm()
     return render(request=request, template_name="accounts/password-reset-form.html", context={"password_reset_form":password_reset_form})
 
-
+@login_required
 def update_comment_status(request, pk, type):
     item = Comments.objects.get(pk=pk)
     if request.user != item.article.author:
         return HttpResponse('deny')
+    
+    if request.user == None:
+        return redirect('login_page')
     
     if type == 'public':
         import operator
@@ -153,8 +203,6 @@ class ArticleCreateView(LoginRequiredMixin, CustomSuccessMessageMixin, CreateVie
         self.object.author = self.request.user
         self.object.save()
         return super().form_valid(form)
-    
-    
 
 class ArticleUpdateView(LoginRequiredMixin, CustomSuccessMessageMixin,UpdateView):
     model = Articles
@@ -184,7 +232,7 @@ class RegisterUserView(CreateView):
     model = User
     template_name = 'register_page.html'
     form_class = RegisterUserForm
-    success_url = reverse_lazy('edit-page')
+    success_url = reverse_lazy('edit_page')
     success_msg = 'User successfully created'
     def form_valid(self,form):
         form_valid = super().form_valid(form)
@@ -196,6 +244,7 @@ class RegisterUserView(CreateView):
 
 class MyProjectLogout(LogoutView):
     next_page = reverse_lazy('edit_page')
+
 
 class ArticleDeleteView(LoginRequiredMixin, DeleteView):
     model = Articles

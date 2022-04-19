@@ -12,10 +12,8 @@ urlpatterns = [
     path('register', views.RegisterUserView.as_view(), name='register_page'),
     path('logout', views.MyProjectLogout.as_view(), name='logout_page'),
     path('password_reset/' , views.password_reset_form, name='password_reset'),
-    path('search/', views.search, name='search'),
+    path('search/', views.search, name='search'), 
+    path('like/<int:pk>', views.like, name='likes'),
     #ajax
     path('update_comment_status/<int:pk>/<slug:type>', views.update_comment_status, name='update_comment_status')
-
-
-
 ]
