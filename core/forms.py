@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import Textarea
-from .models import Articles, Comments
+from .models import Articles, Comments, Message, Chat
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
 
@@ -67,3 +67,9 @@ class CommentForm(forms.ModelForm):
             self.fields[field].widget.attrs['class'] = 'form-control'
         self.fields['text'].widget = Textarea(attrs={'rows':5})
         
+
+class MessageForm(forms.ModelForm):
+    class Meta:
+        model = Message
+        fields = ['message']
+        lobels = {'message': ""}
