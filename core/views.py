@@ -1,7 +1,7 @@
 from django.shortcuts import render,redirect,HttpResponse, get_object_or_404
 
 from .models import Articles,Comments
-from django.views.generic import ListView, DetailView,CreateView, UpdateView,DeleteView, View
+from django.views.generic import ListView, DetailView,CreateView, UpdateView,DeleteView
 from django.views.generic.edit import FormMixin
 from .forms import ArticleForm, AuthUserForm, RegisterUserForm,CommentForm, EmailPostForm, EditProfileName
 from django.urls import reverse, reverse_lazy 
@@ -14,7 +14,6 @@ from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.template import Context, Template
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-
 
 from django.core.mail import send_mail, BadHeaderError
 from django.http import HttpResponse
@@ -41,16 +40,6 @@ def post_list(request):
     except EmprtPage:
         list_articles = paginator.page(paginator.num_pages)
     return render(request, "index.html", {'list_articles': list_articles, 'page':page})
-
-
-
-# chat function
-def chat(request):
-    return render(request, "chat/chat.html")
-
-
-def room(request, room_name):
-    return render(request, "chat/room.html",  {"room_name": room_name})
 
 
 def post_share(request, post_name):
@@ -138,19 +127,6 @@ def search(request):
     return render(request, "search_result.html", {'list_articles': results})
 
 
-
-
-class DialogsView(View):
-    def get(self, request):
-        chats = Chat.objects.filter(members__in = [request.user.id])
-        return render(request, 'chat/dialogs.html', {"user_profile": request.user, "chats": chats})
-
-    #@register.simple_tag
-    def get_companion(user, chat):
-        for u in chat.members.all():
-            if u != user:
-                return u
-        return None
 
 class HomeListView(ListView):
     pass

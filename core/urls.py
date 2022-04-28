@@ -1,7 +1,6 @@
 from django.contrib import admin
 from django.urls import path, re_path
 from core import views
-from django.contrib.auth.decorators import login_required
 
 urlpatterns = [
     path('', views.post_list, name='home'),
@@ -17,14 +16,9 @@ urlpatterns = [
     path('search/', views.search, name = "search_results"),
     #url password reset application urls.py
     path('password_reset/<str:name>/', views.password_reset_form, name="password_reset"),
-    path('chat/', views.chat, name = "chat"),
-    path("chat/<str:room_name>/", views.room, name = "room"),
     #ajax
-    path('update_comment_status/<int:pk>/<slug:type>', views.update_comment_status, name='update_comment_status'),
+    path('update_comment_status/<int:pk>/<slug:type>', views.update_comment_status, name='update_comment_status')
 
-    # urls for chat 
-    re_path(r'^dialog/$', login_required(views.DialogsView.as_view()), name='dialog'),
-    #re_path(r'^dialog/create/(?P<user_id\d+)/$', login_required(views.CreateDialogView.as_view()), name='create_dialog'),
-    #re_path(r'^dialogs/(?P<chat_id>\d+)/$', login_required(views.MessageView.as_view()), name="message"),
+
 
 ]

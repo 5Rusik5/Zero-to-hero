@@ -12,7 +12,18 @@
 
   <link type="image/x-icon" rel="icon" href="https://i1.sndcdn.com/avatars-000196582053-e3h8g9-t240x240.jpg" />
   <title>Zero to Hero</title>
+
+  <style>
+    .chat-messages {
+        height: 400px;
+        overflow-y: auto;
+        background-color: #000;
+        color: #fff;
+    }
+</style>
+
 </head>
+
 
 <body>
 
@@ -61,6 +72,9 @@
       <div style="margin: 0 50px; position: absolute; right: 0;">
         {{request.user}}
         <a href="/password_reset/{{request.user}}">Password reset</a>
+        <button class="btn btn-primary" type="button">
+            <a href="/room/" class="text-white">Rooms</a>
+        </button>
       </div>
 
 
@@ -78,7 +92,7 @@
 
 
       <li class="list-group-item">
-        <img src="{{i.picture.url}}" alt = "{{i.name}}" style = "max-height: 100px; width: 200px; ">
+        <img src="{{i.picture.url}}" alt = "{{i.name}}" style = "max-height: 100px; width: 200px; object-fit: cover;">
 
         <b>{{i.create_date}}</b>
 
@@ -115,8 +129,9 @@
     integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
     crossorigin="anonymous"></script>
 
-
   {% block js %}
+
+  {% block scripts %}{% endblock %}
 
   <div class="pagination" style="margin: 10px 50px; color: #000;">
 
