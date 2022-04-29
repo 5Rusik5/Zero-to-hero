@@ -1,3 +1,5 @@
+{% load custom_tags %}
+{% load static %}
 <!doctype html>
 <html lang="en">
 
@@ -6,21 +8,33 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
+
+  <link rel="shortcut icon" href="{% static 'icons/favicon.ico' %}" type='image/x-icon'>
+
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
     integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
-  <link type="image/x-icon" rel="icon" href="https://i1.sndcdn.com/avatars-000196582053-e3h8g9-t240x240.jpg" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+
+
+  <link type="text/css" href="{% static 'css/edit_page.css' %}" rel="stylesheet">
+
+  <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+    crossorigin="anonymous"></script>
+
   <title>Zero to Hero</title>
 
   <style>
     .chat-messages {
-        height: 400px;
-        overflow-y: auto;
-        background-color: #000;
-        color: #fff;
+      height: 400px;
+      overflow-y: auto;
+      background-color: #000;
+      color: #fff;
     }
-</style>
+  </style>
 
 </head>
 
@@ -51,7 +65,18 @@
         <a class="nav-link btn-danger ml-5" href="{{url_logout_page}}">Logout</a>
       </li>
 
+      <li class="nav-item">
+        {% url 'edit_profile' as url_edit_profile %}
+
+        <a class="nav-link btn-danger ml-5" href="{{url_edit_profile}}">Edit Profile</a>
+      </li>
+
       {% else %}
+
+      <li class="nav-item">
+        {% url 'login_page' as url_login_page %}
+        <a class="nav-link {% if url_edit_profile == request.path %}active{% endif %}" href="{{url_edit_profile}}">Edit Profile</a>
+      </li>
 
       <li class="nav-item">
         {% url 'login_page' as url_login_page %}
@@ -70,10 +95,34 @@
 
 
       <div style="margin: 0 50px; position: absolute; right: 0;">
+        {% if request.user.is_authenticated %}
+        <li class="nav-item dropdown notification-section">
+          <a href="" class="notification dropdown-toggle" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+            aria-expanded="true">
+            <span><i class='fa fa-bell'></i></span>
+            <span class="badge" id="notification-badge">
+              <p id="notification_count"></p>
+            </span>
+          </a>
+
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown" id="notifications-dropdown"
+            data-popper-placement="bottom-end"
+            style="position: absolute; inset: 0px auto auto 0px; margin: 0px; transform: translate3d(-70px, 42px, 0px);">
+
+            {% show_notifications_new %}
+            <hr>
+            {% show_notifications_old %}
+            {% comment %} <li class='dropdown-item'>Hello</li>
+            <hr class="dropdown-divider"> {% endcomment %}
+
+          </ul>
+        </li>
+        {% endif %}
+
         {{request.user}}
         <a href="/password_reset/{{request.user}}">Password reset</a>
         <button class="btn btn-primary" type="button">
-            <a href="/room/" class="text-white">Rooms</a>
+          <a href="/room/" class="text-white">Rooms</a>
         </button>
       </div>
 
@@ -92,7 +141,7 @@
 
 
       <li class="list-group-item">
-        <img src="{{i.picture.url}}" alt = "{{i.name}}" style = "max-height: 100px; width: 200px; object-fit: cover;">
+        <img src="{{i.picture.url}}" alt="{{i.name}}" style="max-height: 100px; width: 200px; object-fit: cover;">
 
         <b>{{i.create_date}}</b>
 
@@ -129,6 +178,19 @@
     integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
     crossorigin="anonymous"></script>
 
+  <script async>
+    (function ($) {
+      setInterval(function () {
+        $.get("ajax_notification/", function (data) {
+          if (data == 0) data = '';
+          $("#notification_count").html(data);
+          console.log(data + ' is data');
+
+        });
+      }, 1000 * 1);
+    })(jQuery)
+  </script>
+
   {% block js %}
 
   {% block scripts %}{% endblock %}
@@ -145,7 +207,6 @@
   {% block contentShare%}
 
   {% endblock %}
-
 
 </body>
 
