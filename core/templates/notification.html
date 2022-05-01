@@ -1,4 +1,4 @@
-<p>Notifications</p>
+<!-- <p>Notifications</p> -->
 {% for i in notifications %}
      {% if i.notification_type == 1 %}
         <li class="dropdown-item">{{i.user_from}} liked your post</li>
@@ -9,12 +9,12 @@
         <li class="dropdown-item">{{i.user_from}} commented your post</li>
         {% load humanize %}
         <p>{{i.date|naturaltime}}</p>
-        <hr class="dropdown-divider">
+        <!-- <hr class="dropdown-divider"> -->
      {% elif i.notification_type == 3 %}
         <li class="dropdown-item">{{i.user_from}} shared your post</li>
         {% load humanize %}
         <p>{{i.date|naturaltime}}</p>
-        <hr class="dropdown-divider">
+        <!-- <hr class="dropdown-divider"> -->
      {% endif %}
 {% endfor %}
        
