@@ -47,8 +47,7 @@ window.addEventListener('DOMContentLoaded', () => {
     };
     
     function scrollSubHeader() {
-        if(document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
-            console.log(subheader);
+        if(body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
             subheader.classList.add("navBar");
             subheader.style.position = `fixed`;
             subheader.style.paddingTop = "30px";
