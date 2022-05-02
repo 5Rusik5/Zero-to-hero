@@ -185,9 +185,9 @@ ul, li{
     padding-right: 20px;
     border-color: #000;
     display: flex; 
-    justify-content: center;
     align-items: center;
     color: #fff;
+    height: 55px;
     transition: 0.3s all;
    
   
@@ -391,4 +391,34 @@ ul, li{
 
 .post_slider_moreInfo .post_link:hover:after {
     width: 100%;
+}
+
+.my-slider img {
+    height: 100%;
+}
+
+[data-action="stop"], [data-action="start"] {
+    display: none;
+}
+
+[data-controls="prev"] {
+    position: absolute;
+    left: 0; 
+    top: 50%; 
+    transform: translateY(-50%);
+}
+
+[data-controls="next"] {
+    position: absolute;
+    right: 0; 
+    top: 50%; 
+    transform: translateY(-50%);
+}
+
+.tns-nav {
+    position: absolute;
+    bottom: 0;
+    right: 50%;
+    z-index: 50;
+    transform: translateX(-50%);
 }

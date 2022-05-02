@@ -1,0 +1,18 @@
+{
+  "status": "done",
+  "assets": {
+    "bunble.js": {
+      "name": "bunble.js",
+      "path": "C:\\Users\\Asus\\my files\\pythonTest\\django\\project0.2\\Zero-to-hero\\core\\static\\webpack_bundles\\bunble.js"
+    },
+    "bunble.js.map": {
+      "name": "bunble.js.map",
+      "path": "C:\\Users\\Asus\\my files\\pythonTest\\django\\project0.2\\Zero-to-hero\\core\\static\\webpack_bundles\\bunble.js.map"
+    }
+  },
+  "chunks": {
+    "main": [
+      "bunble.js"
+    ]
+  }
+}

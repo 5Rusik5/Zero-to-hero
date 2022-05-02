@@ -1,5 +1,9 @@
 {% load custom_tags %}
 {% load static %}
+{% load render_bundle from webpack_loader %}
+
+{% render_bundle 'main' 'js' 'DEFAULT' %}
+
 <!doctype html>
 <html lang="en">
 
@@ -13,6 +17,8 @@
 
   <link href="https://fonts.googleapis.com/css2?family=B612+Mono&family=Cabin:wght@400;500&display=swap"
     rel="stylesheet">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tiny-slider/2.9.4/tiny-slider.css">
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
 
@@ -171,60 +177,14 @@
   </header>
 
 
-  <section class = "post_sliders">
-    <div class="container">
+  {%block content%}
 
-      {% block content %}
-  
-        {% for i in list_articles %}
-  
-            <div class="post_sliders_info">
+  {%endblock%}
 
-              <div class="post_slider_item">
-                <div class="post_slider_img">
 
-                  <span style="background-image: url('{{i.picture.url}}');" ></span>
-                </div>
-                
-                <div class="post_slider_txt">
 
-                  
-                  <h1 class="post_slider_txt1">{{i.name}}</h1>
- 
-                  <p class = "post_txt">{{i.text|truncatechars:"255"}}</p>
-                  
-                  <div class="post_more_info">
-                    {% if user.is_authenticated %}
-                    
-                    <div>
-                      {{i.create_date}}
-                      <span>
-                        <i class="fa-solid fa-star"></i>
-                      </span>
-                    </div> 
-                    
-                    <div class="post_slider_moreInfo">
-                      
-                      <a class="post_link" href="/detail/{{i.id}}">go to article</a>
-                    </div>
-                    
-                    {%endif%}
-                  </div>
-                </div>
-              </div>
-              
-            </div>
-  
-            {% endfor %}
-            
-            {% endblock %}
-          </div>
-          
-        </section>
-        
-      
   {% if user.is_authenticated %}
-      <script src = "{% static 'js/script.js' %}"></script>
+      <script src = "{% static 'js/webpack_bundles/bundle.js' %}"></script>
   {% else %}
       <script src = "{% static 'js/scriptnotAuth.js' %}"></script>
   {% endif %}
@@ -255,22 +215,22 @@
 
   {% endif %}
   
-  {% block js %}
+    {% block js %}
 
-  {% block scripts %}{% endblock %}
+    {% block scripts %}{% endblock %}
 
-  <div class="pagination" style="margin: 10px 50px; color: #000;">
+    <div class="pagination" style="margin: 10px 50px; color: #000;">
 
-    {% include 'pagination.html' with page=list_articles %}
+      {% include 'pagination.html' with page=list_articles %}
 
-  </div>
+    </div>
 
-  {% endblock %}
+    {% endblock %}
 
-  <!-- share block -->
-  {% block contentShare%}
+    <!-- share block -->
+    {% block contentShare%}
 
-  {% endblock %}
+    {% endblock %}
 
 </body>
 

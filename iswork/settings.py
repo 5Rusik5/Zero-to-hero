@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     "hitcount",
     "ckeditor", 
     "captcha",
+    "webpack_loader",
 ]
 
 TEMPLATE_LOADERS = (
@@ -136,17 +137,22 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
+PUBLIC_DIR = os.path.join(BASE_DIR, 'public')
 
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static"),
 )
 
-MEDIA_URL = '/media/'  
+STATIC_ROOT = os.path.join(PUBLIC_DIR, 'static')
+
+STATIC_URL = '/static/'
+
   
 # Path where media is stored  
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')  
 
-STATIC_URL = '/static/'
+MEDIA_URL = '/media/'  
+
 
 LOGIN_URL = 'login_page'
 

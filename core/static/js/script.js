@@ -1,3 +1,4 @@
+import { tns } from "./../../../node_modules/tiny-slider/src/tiny-slider";
 /**
  * @param {obj} loaded-DOM elements 
  * @param {DOM} clickShowHide-notification
@@ -6,6 +7,14 @@
 
 window.addEventListener('DOMContentLoaded', () => { 
     
+    tns({
+        container: '.my-slider',
+        items: 1,
+        slideBy: 'page',
+        autoplay: true
+      });
+
+
     /**
      * @property.DOMElement  allelements-variable
      */
