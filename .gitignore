@@ -42,3 +42,5 @@ yarn-error.log*
 .jshintrc
 
 package-lock.json
+webpack-stats.json
+bunble.js.map
