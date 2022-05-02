@@ -12,11 +12,14 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-
+  
   <link rel="shortcut icon" href="{% static 'icons/favicon.ico' %}" type='image/x-icon'>
-
+ 
+  
   <link href="https://fonts.googleapis.com/css2?family=B612+Mono&family=Cabin:wght@400;500&display=swap"
-    rel="stylesheet">
+  rel="stylesheet">
+  
+  <link type="text/css" href="{% static 'css/edit_page.css' %}" rel="stylesheet">
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tiny-slider/2.9.4/tiny-slider.css">
 
@@ -24,7 +27,6 @@
 
   <link rel="stylesheet" href="{% static 'css/style.css'%}">
 
-  <link type="text/css" href="{% static 'css/edit_page.css' %}" rel="stylesheet">
 
   <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
  
@@ -182,12 +184,49 @@
   {%endblock%}
 
 
+  <section class="prefooter">
+    <div class="container">
+      <div class="prefooter_txt_form">
 
-  {% if user.is_authenticated %}
-      <script src = "{% static 'js/webpack_bundles/bundle.js' %}"></script>
-  {% else %}
-      <script src = "{% static 'js/scriptnotAuth.js' %}"></script>
-  {% endif %}
+        <div class="prefooter_txt">
+          <h2>Newsletter Subcribe</h2>
+          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid quia, ipsum vel totam aspernatur maiores expedita voluptatem soluta exercitationem magni dolor mollitia illum quasi qui iste quod corporis explicabo. Numquam.
+          </p>
+        </div>
+
+        <div class="prefooter_form">
+          <form action=".">
+            <input class = "form_control" type="email" placeholder = "Enter your email">
+            <span>
+              <i class="fa-solid fa-paper-plane"></i>
+            </span>
+          </form>
+        </div>
+      </div>  
+    </div>
+  </section>
+  
+  
+  <footer>
+    
+    <div class="pagination">
+  
+      {% include 'pagination.html' with page=list_articles %}
+  
+    </div>
+    <div class="container">
+      <div class="copyright">
+        <p>
+        
+        Copyright ©<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa-solid fa-heart"></i>by <a href="https://github.com/5Rusik5/Zero-to-hero" target="_blank">Zero-to-Hero</a>
+        
+        </p>
+        </div>
+    </div>
+  </footer>
+
+
+  <script src = "{% static 'js/scriptnotAuth.js' %}"></script>
 
 
   <!-- Optional JavaScript -->
@@ -198,32 +237,11 @@
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
     integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
     crossorigin="anonymous"></script>
-
-  {% if user.is_authenticated %}
-    <script>
-      (function ($) {
-        setInterval(function () {
-          $.get("ajax_notification/", function (data) {
-            if (data == 0) data = '';
-            $("#notification_count").html(data);
-            console.log(data + ' is data');
-
-          });
-        }, 1000 * 1);
-      })(jQuery)
-    </script>
-
-  {% endif %}
+    
   
     {% block js %}
 
     {% block scripts %}{% endblock %}
-
-    <div class="pagination" style="margin: 10px 50px; color: #000;">
-
-      {% include 'pagination.html' with page=list_articles %}
-
-    </div>
 
     {% endblock %}
 

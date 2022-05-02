@@ -1,32 +1,34 @@
-/**
- * @param not_auth - if user noy authenticate
- * @param {obj} loaded-DOM elements 
- * @param {DOM} scrollSubHead - position fixed
- */
+
 
  window.addEventListener('DOMContentLoaded', () => { 
-    
-    /**
-     * @property.DOMElement  allelements-variable
-     */
-    const subheader = document.getElementById("subheader");
 
-    //scroll
-    window.onscroll = function() {
-        scrollSubHeader();
-    };
+    //tiny slide modified
+   const btnPrev= document.querySelector('[data-controls = "prev"]'),
+            btnNext = document.querySelector('[data-controls = "next"]'),
+            tns_navs = document.querySelectorAll("[data-nav]");
     
-    function scrollSubHeader() {
-        if(document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
-            subheader.classList.add("navBar");
-            subheader.style.position = `fixed`;
-            subheader.style.paddingTop = "30px";
-            subheader.style.verticalAlign = "top";
-            subheader.style.transition = "0.3s all ease";
-        }else {
-            subheader.style.position = `relative`;
-            subheader.className = subheader.className.replace("navBar", "subheader");
-        }
+    
+    try {
+        
+        tns_navs.forEach(item => {
+            item.classList.add("tns_nav_all");
+        });
+    
+        btnPrev.innerHTML= "";
+        btnNext.innerHTML = "";
+    
+        let iconNext = document.createElement("i"), 
+            iconPrev = document.createElement("i");
+        iconNext.setAttribute("class", "fa-solid fa-caret-right");
+        iconPrev.setAttribute("class", "fa-solid fa-caret-left");
+    
+        btnNext.append(iconNext);
+        btnPrev.append(iconPrev);
+    
+        btnNext.classList.add("btnNext");
+        btnPrev.classList.add("btnNext");
+    }catch(e) {
+        console.log("Plase sign in", e.message);
     }
 });
 

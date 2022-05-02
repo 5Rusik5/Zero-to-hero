@@ -47,7 +47,7 @@ def post_list(request):
         list_articles = paginator.page(1)
     except EmprtPage:
         list_articles = paginator.page(paginator.num_pages)
-    return render(request, "main.html", {'list_articles': list_articles, 'page':page})
+    return render(request, "main.html", {'list_articles': list_articles, 'page':page, "object_list": object_list})
 
 
 def post_share(request, post_name):
