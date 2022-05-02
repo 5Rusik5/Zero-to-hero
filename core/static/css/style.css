@@ -1,6 +1,26 @@
 *{
     box-sizing: border-box;
+    outline: none; 
 }
+
+html{
+    scroll-padding-top: 9rem; 
+    scroll-behavior: smooth; 
+}
+
+html::-webkit-scrollbar {
+    width: .2rem;
+}
+
+html::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+html::-webkit-scrollbar-thumb {
+    background: #000; 
+    border-radius: 5rem;
+}
+
 
 body {
     font-weight: 400;
@@ -11,6 +31,10 @@ body {
     transition: 0.3s all;
     margin: 0; 
     padding: 0;
+}
+
+section {
+    margin-top: 100px;
 }
 
 a {
@@ -27,6 +51,7 @@ ul, li{
     margin: 0 auto;
 
 }
+
 
 .subheader_user_name {
     font-weight: 400; 
@@ -173,10 +198,21 @@ ul, li{
 }
 
 
+.navBar {
+    position: fixed;
+    width: 100%; 
+    top: 0; 
+    z-index: 100; 
+    background: #fff;
+    transition: .3s all ease;
+    margin-top: 0; 
+}
 
 .header .subheader {
-    margin-top: 30px;
+    padding-top: 30px;
     position: relative;
+    width: 100%;
+    transition: .3s all ease;
 }
 
 
@@ -230,7 +266,7 @@ ul, li{
 {
 
     color: black;
-    margin: 0  0 0 auto; 
+    margin: 0 0 0 auto; 
 }
 
 
@@ -280,4 +316,79 @@ ul, li{
     list-style-type: none; 
     color: #8bc34a;
     opacity: 0;
+}
+
+.post_sliders {
+    min-height: 360px;   
+    position: relative;
+}
+
+.post_sliders .post_sliders_info  .post_slider_item {
+    display: flex; 
+    margin-top: 5px;
+}
+
+
+.post_sliders .post_sliders_info  .post_slider_item .post_slider_img  span {
+    width: 555px; 
+    height: 360px; 
+    display: inline-block;
+    background: center center/cover no-repeat;  
+}
+
+.post_sliders .post_sliders_info  .post_slider_item .post_slider_txt {
+    padding: 50px;
+    font-size: .9rem;
+    display: inline-block;
+    text-align: left;
+    width: 100%;
+    height: 360px;
+    background-color:rgb(248, 249, 250);
+
+    
+}
+
+
+.post_sliders .post_sliders_info  .post_slider_item .post_slider_txt .post_slider_txt1  {
+    font-size: 26px; 
+    font-weight: 400;
+    margin: 2px;
+}
+
+.post_txt {
+    color: rgb(128, 128, 128); 
+    font-size: 14px;
+    font-weight: 300;
+    line-height: 24px
+}
+
+
+.post_more_info {
+    font-size: 12px;
+    font-weight: 400; 
+    margin-top: 20px;
+    display: inline-block;
+}
+
+.post_slider_moreInfo .post_link:nth-child(n) {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: .01rem;
+    display: inline-block;
+    text-decoration: none!important;
+    color: rgb(128,  128, 128);
+
+}
+
+.post_slider_moreInfo .post_link:nth-child(n):after {
+    content: "";
+    display: block; 
+    height: 2px; 
+    width: 0%; 
+    transition: all 0.5s; 
+    background-color: #000;
+}
+
+.post_slider_moreInfo .post_link:hover:after {
+    width: 100%;
 }

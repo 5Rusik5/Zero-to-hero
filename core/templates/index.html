@@ -42,7 +42,8 @@
   <header class="header">
     <div class="container">
       <div class="header_logo">
-        <a href="#" class="header_logo_txt">TellUs</a>
+        {% url 'home' as url_home %}
+        <a href="{{url_home}}" class="header_logo_txt">TellUs</a>
         <div class="header_icon_form">
           <div class="header_icons_img">
             <a href="#" class="header_icons_img_face">
@@ -92,7 +93,7 @@
       </div>
     </div>
 
-    <div class="subheader">
+    <div class="subheader" id = "subheader">
       <div class="container">
         <nav class="subheader_navi">
           <ul class="subheader_menu">
@@ -170,46 +171,61 @@
   </header>
 
 
-  <div>
-    {% block content %}
-    <h1 class="mt-4">Zero to Hero</h1>
+  <section class = "post_sliders">
+    <div class="container">
 
-
-
-    {% for i in list_articles %}
-
-    <ul class="list-group mt-4">
-
-
-      <li class="list-group-item">
-        <img src="{{i.picture.url}}" alt="{{i.name}}" style="max-height: 100px; width: 200px; object-fit: cover;">
-
-        <b>{{i.create_date}}</b>
-
-        <span class="m-2">{{i.name}}</span>
-        <span>{{i.text|truncatechars:"5"}}</span>
-
-        <span class="float-right mr-3">
-          {% if user.is_authenticated %}
-
-          <a href="/detail/{{i.id}}">go to article</a>
-
-          {%endif%}
-          <!--                          <a class="nav-link {% if url_login_page == request.path %}active{% endif %}" href="{{url_login_page}}">go to article</a> -->
-        </span>
-      </li>
-
-    </ul>
-
-    {% endfor %}
-
-    {% endblock %}
-
-  </div>
-
+      {% block content %}
   
-    <script src = "{% static 'js/script.js' %}"></script>
+        {% for i in list_articles %}
+  
+            <div class="post_sliders_info">
 
+              <div class="post_slider_item">
+                <div class="post_slider_img">
+
+                  <span style="background-image: url('{{i.picture.url}}');" ></span>
+                </div>
+                
+                <div class="post_slider_txt">
+
+                  
+                  <h1 class="post_slider_txt1">{{i.name}}</h1>
+ 
+                  <p class = "post_txt">{{i.text|truncatechars:"255"}}</p>
+                  
+                  <div class="post_more_info">
+                    {% if user.is_authenticated %}
+                    
+                    <div>
+                      {{i.create_date}}
+                      <span>
+                        <i class="fa-solid fa-star"></i>
+                      </span>
+                    </div> 
+                    
+                    <div class="post_slider_moreInfo">
+                      
+                      <a class="post_link" href="/detail/{{i.id}}">go to article</a>
+                    </div>
+                    
+                    {%endif%}
+                  </div>
+                </div>
+              </div>
+              
+            </div>
+  
+            {% endfor %}
+            
+            {% endblock %}
+          </div>
+          
+        </section>
+        
+      
+  {% if user.is_authenticated %}
+      <script src = "{% static 'js/script.js' %}"></script>
+  {% endif %}
 
 
   <!-- Optional JavaScript -->
@@ -221,19 +237,22 @@
     integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
     crossorigin="anonymous"></script>
 
-  <script>
-    (function ($) {
-      setInterval(function () {
-        $.get("ajax_notification/", function (data) {
-          if (data == 0) data = '';
-          $("#notification_count").html(data);
-          console.log(data + ' is data');
+  {% if user.is_authenticated %}
+    <script>
+      (function ($) {
+        setInterval(function () {
+          $.get("ajax_notification/", function (data) {
+            if (data == 0) data = '';
+            $("#notification_count").html(data);
+            console.log(data + ' is data');
 
-        });
-      }, 1000 * 1);
-    })(jQuery)
-  </script>
+          });
+        }, 1000 * 1);
+      })(jQuery)
+    </script>
 
+  {% endif %}
+  
   {% block js %}
 
   {% block scripts %}{% endblock %}
