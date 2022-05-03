@@ -4009,7 +4009,8 @@ window.addEventListener('DOMContentLoaded', () => {
         }else {
             posts.innerHTML = `${count}`;
         }
-    })
+    });
+
 });
 
 
